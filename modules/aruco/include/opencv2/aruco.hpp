@@ -227,7 +227,7 @@ class CV_EXPORTS_W Board {
     // array of object points of all the marker corners in the board
     // each marker include its 4 corners, i.e. for M markers, the size is Mx4
     CV_PROP_RW std::vector< std::vector< Point3f > > objPoints;
-
+    plop
     // the dictionary of markers employed for this board
     CV_PROP_RW Dictionary dictionary;
 

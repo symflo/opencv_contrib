@@ -52,17 +52,17 @@ namespace aruco {
  * @brief Dictionary/Set of markers. It contains the inner codification
  *
  */
-class CV_EXPORTS Dictionary {
+class CV_EXPORTS_W Dictionary {
 
     public:
-    Mat bytesList;         // marker code information
-    int markerSize;        // number of bits per dimension
-    int maxCorrectionBits; // maximum number of bits that can be corrected
+    CV_PROP_RW Mat bytesList;         // marker code information
+    CV_PROP_RW int markerSize;        // number of bits per dimension
+    CV_PROP_RW int maxCorrectionBits; // maximum number of bits that can be corrected
 
 
     /**
       */
-    Dictionary(const unsigned char *bytes = 0, int _markerSize = 0, int dictsize = 0,
+    CV_WRAP Dictionary(const unsigned char *bytes = 0, int _markerSize = 0, int dictsize = 0,
                int _maxcorr = 0);
 
 
@@ -71,31 +71,31 @@ class CV_EXPORTS Dictionary {
      * @brief Given a matrix of bits. Returns whether if marker is identified or not.
      * It returns by reference the correct id (if any) and the correct rotation
      */
-    bool identify(const Mat &onlyBits, int &idx, int &rotation, double maxCorrectionRate) const;
+    CV_WRAP bool identify(const Mat &onlyBits, int &idx, int &rotation, double maxCorrectionRate) const;
 
     /**
       * @brief Returns the distance of the input bits to the specific id. If allRotations is true,
       * the four posible bits rotation are considered
       */
-    int getDistanceToId(InputArray bits, int id, bool allRotations = true) const;
+    CV_WRAP int getDistanceToId(InputArray bits, int id, bool allRotations = true) const;
 
 
     /**
      * @brief Draw a canonical marker image
      */
-    void drawMarker(int id, int sidePixels, OutputArray _img, int borderBits = 1) const;
+    CV_WRAP void drawMarker(int id, int sidePixels, OutputArray _img, int borderBits = 1) const;
 
 
     /**
       * @brief Transform matrix of bits to list of bytes in the 4 rotations
       */
-    static Mat getByteListFromBits(const Mat &bits);
+    CV_WRAP static Mat getByteListFromBits(const Mat &bits);
 
 
     /**
       * @brief Transform list of bytes to matrix of bits
       */
-    static Mat getBitsFromByteList(const Mat &byteList, int markerSize);
+    CV_WRAP static Mat getBitsFromByteList(const Mat &byteList, int markerSize);
 };
 
 
@@ -130,7 +130,7 @@ enum PREDEFINED_DICTIONARY_NAME {
 /**
   * @brief Returns one of the predefined dictionaries defined in PREDEFINED_DICTIONARY_NAME
   */
-CV_EXPORTS const Dictionary &getPredefinedDictionary(PREDEFINED_DICTIONARY_NAME name);
+CV_EXPORTS_W const Dictionary &getPredefinedDictionary(PREDEFINED_DICTIONARY_NAME name);
 
 
 /**
@@ -145,7 +145,7 @@ CV_EXPORTS const Dictionary &getPredefinedDictionary(PREDEFINED_DICTIONARY_NAME 
   * included and the rest are generated based on them. If the size of baseDictionary is higher
   * than nMarkers, only the first nMarkers in baseDictionary are taken and no new marker is added.
   */
-CV_EXPORTS Dictionary generateCustomDictionary(int nMarkers, int markerSize,
+CV_EXPORTS_W Dictionary generateCustomDictionary(int nMarkers, int markerSize,
                                                const Dictionary &baseDictionary = Dictionary());
 
 
