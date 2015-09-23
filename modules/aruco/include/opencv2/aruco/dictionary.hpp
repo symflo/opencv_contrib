@@ -130,7 +130,7 @@ enum CV_EXPORTS_W PREDEFINED_DICTIONARY_NAME {
 /**
   * @brief Returns one of the predefined dictionaries defined in PREDEFINED_DICTIONARY_NAME
   */
-CV_EXPORTS_W const Dictionary &getPredefinedDictionary(PREDEFINED_DICTIONARY_NAME name);
+CV_EXPORTS const Dictionary &getPredefinedDictionary(PREDEFINED_DICTIONARY_NAME name);
 
 /**
   * @brief Generates a new customizable marker dictionary
