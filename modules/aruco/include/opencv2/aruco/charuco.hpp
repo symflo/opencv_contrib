@@ -59,7 +59,7 @@ namespace aruco {
  * calibration and pose estimation.
  * This class also allows the easy creation and drawing of ChArUco boards.
  */
-class CV_EXPORTS_W_SIMPLE CharucoBoard : public Board {
+class CV_EXPORTS_W CharucoBoard : public Board {
 
     public:
     // vector of chessboard 3D corners precalculated
@@ -308,7 +308,7 @@ CV_EXPORTS_W void drawDetectedDiamonds(InputOutputArray image, InputArrayOfArray
  *
  * This function return the image of a ChArUco marker, ready to be printed.
  */
-void drawCharucoDiamond(Dictionary dictionary, Vec4i ids, int squareLength,
+CV_EXPORTS_W void drawCharucoDiamond(Dictionary dictionary, Vec4i ids, int squareLength,
                                    int markerLength, OutputArray img, int marginSize = 0,
                                    int borderBits = 1);
 

@@ -121,7 +121,7 @@ namespace aruco {
  * - errorCorrectionRate error correction rate respect to the maximun error correction capability
  *   for each dictionary. (default 0.6).
  */
-struct CV_EXPORTS_W_SIMPLE DetectorParameters {
+struct CV_EXPORTS_W DetectorParameters {
 
     DetectorParameters();
 
@@ -221,7 +221,7 @@ CV_EXPORTS_W void estimatePoseSingleMarkers(InputArrayOfArrays corners, float ma
  * - The dictionary which indicates the type of markers of the board
  * - The identifier of all the markers in the board.
  */
-class CV_EXPORTS_W_SIMPLE Board {
+class CV_EXPORTS_W Board {
 
     public:
     // array of object points of all the marker corners in the board
@@ -229,7 +229,7 @@ class CV_EXPORTS_W_SIMPLE Board {
     std::vector< std::vector< Point3f > > objPoints;
 
     // the dictionary of markers employed for this board
-    CV_PROP_RW Dictionary dictionary;
+    CV_WRAP Dictionary dictionary;
 
     // vector of the identifiers of the markers in the board (same size than objPoints)
     // The identifiers refers to the board dictionary
@@ -243,7 +243,7 @@ class CV_EXPORTS_W_SIMPLE Board {
  * More common type of board. All markers are placed in the same plane in a grid arrangment.
  * The board can be drawn using drawPlanarBoard() function (@sa drawPlanarBoard)
  */
-class CV_EXPORTS_W_SIMPLE GridBoard : public Board {
+class CV_EXPORTS_W GridBoard : public Board {
 
     public:
     /**

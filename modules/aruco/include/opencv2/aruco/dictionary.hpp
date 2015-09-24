@@ -52,20 +52,18 @@ namespace aruco {
  * @brief Dictionary/Set of markers. It contains the inner codification
  *
  */
-class CV_EXPORTS_W_SIMPLE Dictionary {
+class CV_EXPORTS_W Dictionary {
 
     public:
-    CV_PROP_RW Mat bytesList;         // marker code information
-    CV_PROP_RW int markerSize;        // number of bits per dimension
-    CV_PROP_RW int maxCorrectionBits; // maximum number of bits that can be corrected
+    CV_PROP Mat bytesList;         // marker code information
+    CV_PROP int markerSize;        // number of bits per dimension
+    CV_PROP int maxCorrectionBits; // maximum number of bits that can be corrected
 
 
     /**
       */
     Dictionary(const unsigned char *bytes = 0, int _markerSize = 0, int dictsize = 0,
                int _maxcorr = 0);
-
-
 
     /**
      * @brief Given a matrix of bits. Returns whether if marker is identified or not.
@@ -106,7 +104,7 @@ class CV_EXPORTS_W_SIMPLE Dictionary {
  * Each dictionary indicates the number of bits and the number of markers contained
  * - DICT_ARUCO: standard ArUco Library Markers. 1024 markers, 5x5 bits, 0 minimum distance
  */
-enum CV_EXPORTS_W PREDEFINED_DICTIONARY_NAME {
+enum PREDEFINED_DICTIONARY_NAME {
     DICT_4X4_50 = 0,
     DICT_4X4_100,
     DICT_4X4_250,
@@ -130,7 +128,7 @@ enum CV_EXPORTS_W PREDEFINED_DICTIONARY_NAME {
 /**
   * @brief Returns one of the predefined dictionaries defined in PREDEFINED_DICTIONARY_NAME
   */
-CV_EXPORTS const Dictionary &getPredefinedDictionary(PREDEFINED_DICTIONARY_NAME name);
+CV_EXPORTS_W const Dictionary &getPredefinedDictionary(PREDEFINED_DICTIONARY_NAME name);
 
 /**
   * @brief Generates a new customizable marker dictionary
