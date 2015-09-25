@@ -274,7 +274,7 @@ class CV_EXPORTS_W GridBoard : public Board {
      * This functions creates a GridBoard object given the number of markers in each direction and
      * the marker size and marker separation.
      */
-    CV_WRAP static GridBoard create(int markersX, int markersY, float markerLength, float markerSeparation,
+    CV_WRAP static Ptr<GridBoard> create(int markersX, int markersY, float markerLength, float markerSeparation,
                             Dictionary dictionary);
 
     /**
@@ -332,7 +332,7 @@ class CV_EXPORTS_W GridBoard : public Board {
  * The function returns the number of markers from the input employed for the board pose estimation.
  * Note that returning a 0 means the pose has not been estimated.
  */
-CV_EXPORTS_W int estimatePoseBoard(InputArrayOfArrays corners, InputArray ids, const Board &board,
+CV_EXPORTS_W int estimatePoseBoard(InputArrayOfArrays corners, InputArray ids, const Ptr<Board> &board,
                                  InputArray cameraMatrix, InputArray distCoeffs, OutputArray rvec,
                                  OutputArray tvec);
 
@@ -371,7 +371,7 @@ CV_EXPORTS_W int estimatePoseBoard(InputArrayOfArrays corners, InputArray ids, c
  * homography, and all the marker corners in the board must have the same Z coordinate.
  */
 CV_EXPORTS_W void refineDetectedMarkers(
-    InputArray image, const Board &board, InputOutputArrayOfArrays detectedCorners,
+    InputArray image, const Ptr<Board> &board, InputOutputArrayOfArrays detectedCorners,
     InputOutputArray detectedIds, InputOutputArray rejectedCorners,
     InputArray cameraMatrix = noArray(), InputArray distCoeffs = noArray(),
     float minRepDistance = 10.f, float errorCorrectionRate = 3.f, bool checkAllOrders = true,
@@ -454,7 +454,7 @@ CV_EXPORTS_W void drawMarker(Dictionary dictionary, int id, int sidePixels, Outp
  * This function return the image of a planar board, ready to be printed. It assumes
  * the Board layout specified is planar by ignoring the z coordinates of the object points.
  */
-CV_EXPORTS_W void drawPlanarBoard(const Board &board, Size outSize, OutputArray img,
+CV_EXPORTS_W void drawPlanarBoard(const Ptr<Board> &board, Size outSize, OutputArray img,
                                 int marginSize = 0, int borderBits = 1);
 
 
@@ -488,7 +488,7 @@ CV_EXPORTS_W void drawPlanarBoard(const Board &board, Size outSize, OutputArray 
  * calibration in calibrateCamera(). The function returns the final re-projection error.
  */
 CV_EXPORTS_W double calibrateCameraAruco(
-    InputArrayOfArrays corners, InputArray ids, InputArray counter, const Board &board,
+    InputArrayOfArrays corners, InputArray ids, InputArray counter, const Ptr<Board> &board,
     Size imageSize, InputOutputArray cameraMatrix, InputOutputArray distCoeffs,
     OutputArrayOfArrays rvecs = noArray(), OutputArrayOfArrays tvecs = noArray(), int flags = 0,
     TermCriteria criteria = TermCriteria(TermCriteria::COUNT + TermCriteria::EPS, 30, DBL_EPSILON));

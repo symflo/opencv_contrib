@@ -912,11 +912,11 @@ void estimatePoseSingleMarkers(InputArrayOfArrays _corners, float markerLength,
   * @brief Given a board configuration and a set of detected markers, returns the corresponding
   * image points and object points to call solvePnP
   */
-static void _getBoardObjectAndImagePoints(const Board &board, InputArray _detectedIds,
+static void _getBoardObjectAndImagePoints(const Ptr<Board> &board, InputArray _detectedIds,
                                           InputArrayOfArrays _detectedCorners,
                                           OutputArray _imgPoints, OutputArray _objPoints) {
 
-    CV_Assert(board.ids.size() == board.objPoints.size());
+    CV_Assert(board->ids.size() == board->objPoints.size());
     CV_Assert(_detectedIds.total() == _detectedCorners.total());
 
     int nDetectedMarkers = (int)_detectedIds.total();
@@ -930,10 +930,10 @@ static void _getBoardObjectAndImagePoints(const Board &board, InputArray _detect
     // look for detected markers that belong to the board and get their information
     for(int i = 0; i < nDetectedMarkers; i++) {
         int currentId = _detectedIds.getMat().ptr< int >(0)[i];
-        for(unsigned int j = 0; j < board.ids.size(); j++) {
-            if(currentId == board.ids[j]) {
+        for(unsigned int j = 0; j < board->ids.size(); j++) {
+            if(currentId == board->ids[j]) {
                 for(int p = 0; p < 4; p++) {
-                    objPnts.push_back(board.objPoints[j][p]);
+                    objPnts.push_back(board->objPoints[j][p]);
                     imgPnts.push_back(_detectedCorners.getMat(i).ptr< Point2f >(0)[p]);
                 }
             }
@@ -955,7 +955,7 @@ static void _getBoardObjectAndImagePoints(const Board &board, InputArray _detect
 /**
   * Project board markers that are not included in the list of detected markers
   */
-static void _projectUndetectedMarkers(const Board &board, InputOutputArrayOfArrays _detectedCorners,
+static void _projectUndetectedMarkers(const Ptr<Board> &board, InputOutputArrayOfArrays _detectedCorners,
                                       InputOutputArray _detectedIds, InputArray _cameraMatrix,
                                       InputArray _distCoeffs,
                                       OutputArrayOfArrays _undetectedMarkersProjectedCorners,
@@ -973,10 +973,10 @@ static void _projectUndetectedMarkers(const Board &board, InputOutputArrayOfArra
     // search undetected markers and project them using the previous pose
     vector< vector< Point2f > > undetectedCorners;
     vector< int > undetectedIds;
-    for(unsigned int i = 0; i < board.ids.size(); i++) {
+    for(unsigned int i = 0; i < board->ids.size(); i++) {
         int foundIdx = -1;
         for(unsigned int j = 0; j < _detectedIds.total(); j++) {
-            if(board.ids[i] == _detectedIds.getMat().ptr< int >()[j]) {
+            if(board->ids[i] == _detectedIds.getMat().ptr< int >()[j]) {
                 foundIdx = j;
                 break;
             }
@@ -985,8 +985,8 @@ static void _projectUndetectedMarkers(const Board &board, InputOutputArrayOfArra
         // not detected
         if(foundIdx == -1) {
             undetectedCorners.push_back(vector< Point2f >());
-            undetectedIds.push_back(board.ids[i]);
-            projectPoints(board.objPoints[i], rvec, tvec, _cameraMatrix, _distCoeffs,
+            undetectedIds.push_back(board->ids[i]);
+            projectPoints(board->objPoints[i], rvec, tvec, _cameraMatrix, _distCoeffs,
                           undetectedCorners.back());
         }
     }
@@ -1013,19 +1013,19 @@ static void _projectUndetectedMarkers(const Board &board, InputOutputArrayOfArra
   * Interpolate board markers that are not included in the list of detected markers using
   * global homography
   */
-static void _projectUndetectedMarkers(const Board &board, InputOutputArrayOfArrays _detectedCorners,
+static void _projectUndetectedMarkers(const Ptr<Board> &board, InputOutputArrayOfArrays _detectedCorners,
                                       InputOutputArray _detectedIds,
                                       OutputArrayOfArrays _undetectedMarkersProjectedCorners,
                                       OutputArray _undetectedMarkersIds) {
 
 
     // check board points are in the same plane, if not, global homography cannot be applied
-    CV_Assert(board.objPoints.size() > 0);
-    CV_Assert(board.objPoints[0].size() > 0);
-    float boardZ = board.objPoints[0][0].z;
-    for(unsigned int i = 0; i < board.objPoints.size(); i++) {
-        for(unsigned int j = 0; j < board.objPoints[i].size(); j++) {
-            CV_Assert(boardZ == board.objPoints[i][j].z);
+    CV_Assert(board->objPoints.size() > 0);
+    CV_Assert(board->objPoints[0].size() > 0);
+    float boardZ = board->objPoints[0][0].z;
+    for(unsigned int i = 0; i < board->objPoints.size(); i++) {
+        for(unsigned int j = 0; j < board->objPoints[i].size(); j++) {
+            CV_Assert(boardZ == board->objPoints[i][j].z);
         }
     }
 
@@ -1035,15 +1035,15 @@ static void _projectUndetectedMarkers(const Board &board, InputOutputArrayOfArra
     vector< vector< Point2f > > undetectedMarkersObj2D; // Object coordinates (without Z) of all
                                                         // missing markers in different vectors
     vector< int > undetectedMarkersIds; // ids of missing markers
-    // find markers included in board, and missing markers from board. Fill the previous vectors
-    for(unsigned int j = 0; j < board.ids.size(); j++) {
+    // find markers included in board, and missing markers from board-> Fill the previous vectors
+    for(unsigned int j = 0; j < board->ids.size(); j++) {
         bool found = false;
         for(unsigned int i = 0; i < _detectedIds.total(); i++) {
-            if(_detectedIds.getMat().ptr< int >()[i] == board.ids[j]) {
+            if(_detectedIds.getMat().ptr< int >()[i] == board->ids[j]) {
                 for(int c = 0; c < 4; c++) {
                     imageCornersAll.push_back(_detectedCorners.getMat(i).ptr< Point2f >()[c]);
                     detectedMarkersObj2DAll.push_back(
-                        Point2f(board.objPoints[j][c].x, board.objPoints[j][c].y));
+                        Point2f(board->objPoints[j][c].x, board->objPoints[j][c].y));
                 }
                 found = true;
                 break;
@@ -1053,9 +1053,9 @@ static void _projectUndetectedMarkers(const Board &board, InputOutputArrayOfArra
             undetectedMarkersObj2D.push_back(vector< Point2f >());
             for(int c = 0; c < 4; c++) {
                 undetectedMarkersObj2D.back().push_back(
-                    Point2f(board.objPoints[j][c].x, board.objPoints[j][c].y));
+                    Point2f(board->objPoints[j][c].x, board->objPoints[j][c].y));
             }
-            undetectedMarkersIds.push_back(board.ids[j]);
+            undetectedMarkersIds.push_back(board->ids[j]);
         }
     }
     if(imageCornersAll.size() == 0) return;
@@ -1083,7 +1083,7 @@ static void _projectUndetectedMarkers(const Board &board, InputOutputArrayOfArra
 
 /**
   */
-void refineDetectedMarkers(InputArray _image, const Board &board,
+void refineDetectedMarkers(InputArray _image, const Ptr<Board> &board,
                            InputOutputArrayOfArrays _detectedCorners, InputOutputArray _detectedIds,
                            InputOutputArray _rejectedCorners, InputArray _cameraMatrix,
                            InputArray _distCoeffs, float minRepDistance, float errorCorrectionRate,
@@ -1113,7 +1113,7 @@ void refineDetectedMarkers(InputArray _image, const Board &board,
 
     // maximum bits that can be corrected
     int maxCorrectionRecalculated =
-        int(double(board.dictionary.maxCorrectionBits) * errorCorrectionRate);
+        int(double(board->dictionary.maxCorrectionBits) * errorCorrectionRate);
 
     Mat grey;
     _convertToGrey(_image, grey);
@@ -1181,7 +1181,7 @@ void refineDetectedMarkers(InputArray _image, const Board &board,
 
                 // extract bits
                 Mat bits = _extractBits(
-                    grey, rotatedMarker, board.dictionary.markerSize, params.markerBorderBits,
+                    grey, rotatedMarker, board->dictionary.markerSize, params.markerBorderBits,
                     params.perspectiveRemovePixelPerCell,
                     params.perspectiveRemoveIgnoredMarginPerCell, params.minOtsuStdDev);
 
@@ -1190,7 +1190,7 @@ void refineDetectedMarkers(InputArray _image, const Board &board,
                         .colRange(params.markerBorderBits, bits.rows - params.markerBorderBits);
 
                 codeDistance =
-                    board.dictionary.getDistanceToId(onlyBits, undetectedMarkersIds[i], false);
+                    board->dictionary.getDistanceToId(onlyBits, undetectedMarkersIds[i], false);
             }
 
             // if everythin is ok, assign values to current best match
@@ -1279,7 +1279,7 @@ void refineDetectedMarkers(InputArray _image, const Board &board,
 
 /**
   */
-int estimatePoseBoard(InputArrayOfArrays _corners, InputArray _ids, const Board &board,
+int estimatePoseBoard(InputArrayOfArrays _corners, InputArray _ids, const Ptr<Board> &board,
                       InputArray _cameraMatrix, InputArray _distCoeffs, OutputArray _rvec,
                       OutputArray _tvec) {
 
@@ -1308,33 +1308,33 @@ int estimatePoseBoard(InputArrayOfArrays _corners, InputArray _ids, const Board 
 /**
  */
 void GridBoard::draw(Size outSize, OutputArray _img, int marginSize, int borderBits) {
-    aruco::drawPlanarBoard((*this), outSize, _img, marginSize, borderBits);
+    aruco::drawPlanarBoard(makePtr<Board>(*this), outSize, _img, marginSize, borderBits);
 }
 
 
 
 /**
  */
-GridBoard GridBoard::create(int markersX, int markersY, float markerLength, float markerSeparation,
+Ptr<GridBoard> GridBoard::create(int markersX, int markersY, float markerLength, float markerSeparation,
                             Dictionary _dictionary) {
 
-    GridBoard res;
+    Ptr<GridBoard> res;
 
     CV_Assert(markersX > 0 && markersY > 0 && markerLength > 0 && markerSeparation > 0);
 
-    res._markersX = markersX;
-    res._markersY = markersY;
-    res._markerLength = markerLength;
-    res._markerSeparation = markerSeparation;
-    res.dictionary = _dictionary;
+    res->_markersX = markersX;
+    res->_markersY = markersY;
+    res->_markerLength = markerLength;
+    res->_markerSeparation = markerSeparation;
+    res->dictionary = _dictionary;
 
     int totalMarkers = markersX * markersY;
-    res.ids.resize(totalMarkers);
-    res.objPoints.reserve(totalMarkers);
+    res->ids.resize(totalMarkers);
+    res->objPoints.reserve(totalMarkers);
 
     // fill ids with first identifiers
     for(int i = 0; i < totalMarkers; i++)
-        res.ids[i] = i;
+        res->ids[i] = i;
 
     // calculate Board objPoints
     float maxY = (float)markersY * markerLength + (markersY - 1) * markerSeparation;
@@ -1347,7 +1347,7 @@ GridBoard GridBoard::create(int markersX, int markersY, float markerLength, floa
             corners[1] = corners[0] + Point3f(markerLength, 0, 0);
             corners[2] = corners[0] + Point3f(markerLength, -markerLength, 0);
             corners[3] = corners[0] + Point3f(0, -markerLength, 0);
-            res.objPoints.push_back(corners);
+            res->objPoints.push_back(corners);
         }
     }
 
@@ -1439,7 +1439,7 @@ void drawMarker(Dictionary dictionary, int id, int sidePixels, OutputArray _img,
 
 /**
  */
-void drawPlanarBoard(const Board &board, Size outSize, OutputArray _img, int marginSize,
+void drawPlanarBoard(const Ptr<Board> &board, Size outSize, OutputArray _img, int marginSize,
                      int borderBits) {
 
     CV_Assert(outSize.area() > 0);
@@ -1452,17 +1452,17 @@ void drawPlanarBoard(const Board &board, Size outSize, OutputArray _img, int mar
         out.colRange(marginSize, out.cols - marginSize).rowRange(marginSize, out.rows - marginSize);
 
     // calculate max and min values in XY plane
-    CV_Assert(board.objPoints.size() > 0);
+    CV_Assert(board->objPoints.size() > 0);
     float minX, maxX, minY, maxY;
-    minX = maxX = board.objPoints[0][0].x;
-    minY = maxY = board.objPoints[0][0].y;
+    minX = maxX = board->objPoints[0][0].x;
+    minY = maxY = board->objPoints[0][0].y;
 
-    for(unsigned int i = 0; i < board.objPoints.size(); i++) {
+    for(unsigned int i = 0; i < board->objPoints.size(); i++) {
         for(int j = 0; j < 4; j++) {
-            minX = min(minX, board.objPoints[i][j].x);
-            maxX = max(maxX, board.objPoints[i][j].x);
-            minY = min(minY, board.objPoints[i][j].y);
-            maxY = max(maxY, board.objPoints[i][j].y);
+            minX = min(minX, board->objPoints[i][j].x);
+            maxX = max(maxX, board->objPoints[i][j].x);
+            minY = min(minY, board->objPoints[i][j].y);
+            maxY = max(maxY, board->objPoints[i][j].y);
         }
     }
 
@@ -1487,14 +1487,14 @@ void drawPlanarBoard(const Board &board, Size outSize, OutputArray _img, int mar
     }
 
     // now paint each marker
-    for(unsigned int m = 0; m < board.objPoints.size(); m++) {
+    for(unsigned int m = 0; m < board->objPoints.size(); m++) {
 
         // transform corners to markerZone coordinates
         vector< Point2f > outCorners;
         outCorners.resize(4);
         for(int j = 0; j < 4; j++) {
             Point2f p0, p1, pf;
-            p0 = Point2f(board.objPoints[m][j].x, board.objPoints[m][j].y);
+            p0 = Point2f(board->objPoints[m][j].x, board->objPoints[m][j].y);
             // remove negativity
             p1.x = p0.x - minX;
             p1.y = p0.y - minY;
@@ -1504,9 +1504,9 @@ void drawPlanarBoard(const Board &board, Size outSize, OutputArray _img, int mar
         }
 
         // get tiny marker
-        int tinyMarkerSize = 10 * board.dictionary.markerSize + 2;
+        int tinyMarkerSize = 10 * board->dictionary.markerSize + 2;
         Mat tinyMarker;
-        board.dictionary.drawMarker(board.ids[m], tinyMarkerSize, tinyMarker, borderBits);
+        board->dictionary.drawMarker(board->ids[m], tinyMarkerSize, tinyMarker, borderBits);
 
         // interpolate tiny marker to marker position in markerZone
         Mat inCorners(4, 1, CV_32FC2);
@@ -1537,7 +1537,7 @@ void drawPlanarBoard(const Board &board, Size outSize, OutputArray _img, int mar
 /**
   */
 double calibrateCameraAruco(InputArrayOfArrays _corners, InputArray _ids, InputArray _counter,
-                            const Board &board, Size imageSize, InputOutputArray _cameraMatrix,
+                            const Ptr<Board> &board, Size imageSize, InputOutputArray _cameraMatrix,
                             InputOutputArray _distCoeffs, OutputArrayOfArrays _rvecs,
                             OutputArrayOfArrays _tvecs, int flags, TermCriteria criteria) {
 

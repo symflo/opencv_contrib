@@ -140,15 +140,15 @@ static void projectMarker(Mat &img, aruco::Dictionary dictionary, int id,
 /**
  * @brief Get a synthetic image of GridBoard in perspective
  */
-static Mat projectBoard(aruco::GridBoard board, Mat cameraMatrix, double yaw, double pitch,
+static Mat projectBoard(Ptr<aruco::GridBoard> board, Mat cameraMatrix, double yaw, double pitch,
                         double distance, Size imageSize, int markerBorder) {
 
     Mat rvec, tvec;
     getSyntheticRT(yaw, pitch, distance, rvec, tvec);
 
     Mat img = Mat(imageSize, CV_8UC1, Scalar::all(255));
-    for(unsigned int m = 0; m < board.ids.size(); m++) {
-        projectMarker(img, board.dictionary, board.ids[m], board.objPoints[m], cameraMatrix, rvec,
+    for(unsigned int m = 0; m < board->ids.size(); m++) {
+        projectMarker(img, board->dictionary, board->ids[m], board->objPoints[m], cameraMatrix, rvec,
                       tvec, markerBorder);
     }
 
@@ -178,7 +178,7 @@ void CV_ArucoBoardPose::run(int) {
     Mat cameraMatrix = Mat::eye(3, 3, CV_64FC1);
     Size imgSize(500, 500);
     aruco::Dictionary dictionary = aruco::getPredefinedDictionary(aruco::DICT_6X6_250);
-    aruco::GridBoard board = aruco::GridBoard::create(3, 3, 0.02f, 0.005f, dictionary);
+    Ptr<aruco::GridBoard> board = aruco::GridBoard::create(3, 3, 0.02f, 0.005f, dictionary);
     cameraMatrix.at< double >(0, 0) = cameraMatrix.at< double >(1, 1) = 650;
     cameraMatrix.at< double >(0, 2) = imgSize.width / 2;
     cameraMatrix.at< double >(1, 2) = imgSize.height / 2;
@@ -188,8 +188,8 @@ void CV_ArucoBoardPose::run(int) {
     for(double distance = 0.2; distance <= 0.4; distance += 0.2) {
         for(int yaw = 0; yaw < 360; yaw += 100) {
             for(int pitch = 30; pitch <= 90; pitch += 50) {
-                for(unsigned int i = 0; i < board.ids.size(); i++)
-                    board.ids[i] = (iter + int(i)) % 250;
+                for(unsigned int i = 0; i < board->ids.size(); i++)
+                    board->ids[i] = (iter + int(i)) % 250;
                 int markerBorder = iter % 2 + 1;
                 iter++;
 
@@ -218,8 +218,8 @@ void CV_ArucoBoardPose::run(int) {
                 // check result
                 for(unsigned int i = 0; i < ids.size(); i++) {
                     int foundIdx = -1;
-                    for(unsigned int j = 0; j < board.ids.size(); j++) {
-                        if(board.ids[j] == ids[i]) {
+                    for(unsigned int j = 0; j < board->ids.size(); j++) {
+                        if(board->ids[j] == ids[i]) {
                             foundIdx = int(j);
                             break;
                         }
@@ -232,7 +232,7 @@ void CV_ArucoBoardPose::run(int) {
                     }
 
                     vector< Point2f > projectedCorners;
-                    projectPoints(board.objPoints[foundIdx], rvec, tvec, cameraMatrix, distCoeffs,
+                    projectPoints(board->objPoints[foundIdx], rvec, tvec, cameraMatrix, distCoeffs,
                                   projectedCorners);
 
                     for(int c = 0; c < 4; c++) {
@@ -272,7 +272,7 @@ void CV_ArucoRefine::run(int) {
     Mat cameraMatrix = Mat::eye(3, 3, CV_64FC1);
     Size imgSize(500, 500);
     aruco::Dictionary dictionary = aruco::getPredefinedDictionary(aruco::DICT_6X6_250);
-    aruco::GridBoard board = aruco::GridBoard::create(3, 3, 0.02f, 0.005f, dictionary);
+    Ptr<aruco::GridBoard> board = aruco::GridBoard::create(3, 3, 0.02f, 0.005f, dictionary);
     cameraMatrix.at< double >(0, 0) = cameraMatrix.at< double >(1, 1) = 650;
     cameraMatrix.at< double >(0, 2) = imgSize.width / 2;
     cameraMatrix.at< double >(1, 2) = imgSize.height / 2;
@@ -282,8 +282,8 @@ void CV_ArucoRefine::run(int) {
     for(double distance = 0.2; distance <= 0.4; distance += 0.2) {
         for(int yaw = 0; yaw < 360; yaw += 100) {
             for(int pitch = 30; pitch <= 90; pitch += 50) {
-                for(unsigned int i = 0; i < board.ids.size(); i++)
-                    board.ids[i] = (iter + int(i)) % 250;
+                for(unsigned int i = 0; i < board->ids.size(); i++)
+                    board->ids[i] = (iter + int(i)) % 250;
                 int markerBorder = iter % 2 + 1;
                 iter++;
 

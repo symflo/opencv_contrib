@@ -193,7 +193,7 @@ int main(int argc, char *argv[]) {
                                markerSeparation);
 
     // create board object
-    aruco::GridBoard board =
+    Ptr<aruco::GridBoard> board =
         aruco::GridBoard::create(markersX, markersY, markerLength, markerSeparation, dictionary);
 
     double totalTime = 0;
