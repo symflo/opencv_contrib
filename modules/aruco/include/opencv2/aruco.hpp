@@ -171,7 +171,7 @@ struct CV_EXPORTS_W DetectorParameters {
  * @sa estimatePoseSingleMarkers,  estimatePoseBoard
  *
  */
-CV_EXPORTS_W void detectMarkers(InputArray image, Dictionary dictionary, OutputArrayOfArrays corners,
+CV_EXPORTS_W void detectMarkers(InputArray image, Ptr<Dictionary> dictionary, OutputArrayOfArrays corners,
                               OutputArray ids, DetectorParameters parameters = DetectorParameters(),
                               OutputArrayOfArrays rejectedImgPoints = noArray());
 
@@ -229,7 +229,7 @@ class CV_EXPORTS_W Board {
     std::vector< std::vector< Point3f > > objPoints;
 
     // the dictionary of markers employed for this board
-    CV_WRAP Dictionary dictionary;
+    CV_PROP Ptr<Dictionary> dictionary;
 
     // vector of the identifiers of the markers in the board (same size than objPoints)
     // The identifiers refers to the board dictionary
@@ -275,7 +275,7 @@ class CV_EXPORTS_W GridBoard : public Board {
      * the marker size and marker separation.
      */
     CV_WRAP static Ptr<GridBoard> create(int markersX, int markersY, float markerLength, float markerSeparation,
-                            Dictionary dictionary);
+                            Ptr<Dictionary> dictionary);
 
     /**
       *
@@ -435,7 +435,7 @@ CV_EXPORTS_W void drawAxis(InputOutputArray image, InputArray cameraMatrix, Inpu
  *
  * This function returns a marker image in its canonical form (i.e. ready to be printed)
  */
-CV_EXPORTS_W void drawMarker(Dictionary dictionary, int id, int sidePixels, OutputArray img,
+CV_EXPORTS_W void drawMarker(Ptr<Dictionary> dictionary, int id, int sidePixels, OutputArray img,
                            int borderBits = 1);
 
 

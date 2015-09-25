@@ -275,30 +275,30 @@ Mat Dictionary::getBitsFromByteList(const Mat &byteList, int markerSize) {
 
 
 // DictionaryData constructors calls
-const Dictionary DICT_ARUCO_DATA = Dictionary(&(DICT_ARUCO_BYTES[0][0][0]), 5, 1024, 1);
+const Ptr<Dictionary> DICT_ARUCO_DATA = makePtr<Dictionary>(Dictionary(&(DICT_ARUCO_BYTES[0][0][0]), 5, 1024, 1));
 
-const Dictionary DICT_4X4_50_DATA = Dictionary(&(DICT_4X4_1000_BYTES[0][0][0]), 4, 50, 1);
-const Dictionary DICT_4X4_100_DATA = Dictionary(&(DICT_4X4_1000_BYTES[0][0][0]), 4, 100, 1);
-const Dictionary DICT_4X4_250_DATA = Dictionary(&(DICT_4X4_1000_BYTES[0][0][0]), 4, 250, 1);
-const Dictionary DICT_4X4_1000_DATA = Dictionary(&(DICT_4X4_1000_BYTES[0][0][0]), 4, 1000, 0);
+const Ptr<Dictionary> DICT_4X4_50_DATA = makePtr<Dictionary>(Dictionary(&(DICT_4X4_1000_BYTES[0][0][0]), 4, 50, 1));
+const Ptr<Dictionary> DICT_4X4_100_DATA = makePtr<Dictionary>(Dictionary(&(DICT_4X4_1000_BYTES[0][0][0]), 4, 100, 1));
+const Ptr<Dictionary> DICT_4X4_250_DATA = makePtr<Dictionary>(Dictionary(&(DICT_4X4_1000_BYTES[0][0][0]), 4, 250, 1));
+const Ptr<Dictionary> DICT_4X4_1000_DATA = makePtr<Dictionary>(Dictionary(&(DICT_4X4_1000_BYTES[0][0][0]), 4, 1000, 0));
 
-const Dictionary DICT_5X5_50_DATA = Dictionary(&(DICT_5X5_1000_BYTES[0][0][0]), 5, 50, 3);
-const Dictionary DICT_5X5_100_DATA = Dictionary(&(DICT_5X5_1000_BYTES[0][0][0]), 5, 100, 3);
-const Dictionary DICT_5X5_250_DATA = Dictionary(&(DICT_5X5_1000_BYTES[0][0][0]), 5, 250, 2);
-const Dictionary DICT_5X5_1000_DATA = Dictionary(&(DICT_5X5_1000_BYTES[0][0][0]), 5, 1000, 2);
+const Ptr<Dictionary> DICT_5X5_50_DATA = makePtr<Dictionary>(Dictionary(&(DICT_5X5_1000_BYTES[0][0][0]), 5, 50, 3));
+const Ptr<Dictionary> DICT_5X5_100_DATA = makePtr<Dictionary>(Dictionary(&(DICT_5X5_1000_BYTES[0][0][0]), 5, 100, 3));
+const Ptr<Dictionary> DICT_5X5_250_DATA = makePtr<Dictionary>(Dictionary(&(DICT_5X5_1000_BYTES[0][0][0]), 5, 250, 2));
+const Ptr<Dictionary> DICT_5X5_1000_DATA = makePtr<Dictionary>(Dictionary(&(DICT_5X5_1000_BYTES[0][0][0]), 5, 1000, 2));
 
-const Dictionary DICT_6X6_50_DATA = Dictionary(&(DICT_6X6_1000_BYTES[0][0][0]), 6, 50, 6);
-const Dictionary DICT_6X6_100_DATA = Dictionary(&(DICT_6X6_1000_BYTES[0][0][0]), 6, 100, 5);
-const Dictionary DICT_6X6_250_DATA = Dictionary(&(DICT_6X6_1000_BYTES[0][0][0]), 6, 250, 5);
-const Dictionary DICT_6X6_1000_DATA = Dictionary(&(DICT_6X6_1000_BYTES[0][0][0]), 6, 1000, 4);
+const Ptr<Dictionary> DICT_6X6_50_DATA = makePtr<Dictionary>(Dictionary(&(DICT_6X6_1000_BYTES[0][0][0]), 6, 50, 6));
+const Ptr<Dictionary> DICT_6X6_100_DATA = makePtr<Dictionary>(Dictionary(&(DICT_6X6_1000_BYTES[0][0][0]), 6, 100, 5));
+const Ptr<Dictionary> DICT_6X6_250_DATA = makePtr<Dictionary>(Dictionary(&(DICT_6X6_1000_BYTES[0][0][0]), 6, 250, 5));
+const Ptr<Dictionary> DICT_6X6_1000_DATA = makePtr<Dictionary>(Dictionary(&(DICT_6X6_1000_BYTES[0][0][0]), 6, 1000, 4));
 
-const Dictionary DICT_7X7_50_DATA = Dictionary(&(DICT_7X7_1000_BYTES[0][0][0]), 7, 50, 9);
-const Dictionary DICT_7X7_100_DATA = Dictionary(&(DICT_7X7_1000_BYTES[0][0][0]), 7, 100, 8);
-const Dictionary DICT_7X7_250_DATA = Dictionary(&(DICT_7X7_1000_BYTES[0][0][0]), 7, 250, 8);
-const Dictionary DICT_7X7_1000_DATA = Dictionary(&(DICT_7X7_1000_BYTES[0][0][0]), 7, 1000, 6);
+const Ptr<Dictionary> DICT_7X7_50_DATA = makePtr<Dictionary>(Dictionary(&(DICT_7X7_1000_BYTES[0][0][0]), 7, 50, 9));
+const Ptr<Dictionary> DICT_7X7_100_DATA = makePtr<Dictionary>(Dictionary(&(DICT_7X7_1000_BYTES[0][0][0]), 7, 100, 8));
+const Ptr<Dictionary> DICT_7X7_250_DATA = makePtr<Dictionary>(Dictionary(&(DICT_7X7_1000_BYTES[0][0][0]), 7, 250, 8));
+const Ptr<Dictionary> DICT_7X7_1000_DATA = makePtr<Dictionary>(Dictionary(&(DICT_7X7_1000_BYTES[0][0][0]), 7, 1000, 6));
 
 
-const Dictionary &getPredefinedDictionary(PREDEFINED_DICTIONARY_NAME name) {
+const Ptr<Dictionary> &getPredefinedDictionary(PREDEFINED_DICTIONARY_NAME name) {
     switch(name) {
 
     case DICT_ARUCO_ORIGINAL:
@@ -382,11 +382,11 @@ static int _getSelfDistance(const Mat &marker) {
 
 /**
  */
-Dictionary generateCustomDictionary(int nMarkers, int markerSize,
-                                    const Dictionary &baseDictionary) {
+Ptr<Dictionary> generateCustomDictionary(int nMarkers, int markerSize,
+                                    const Ptr<Dictionary> &baseDictionary) {
 
-    Dictionary out;
-    out.markerSize = markerSize;
+    Ptr<Dictionary> out;
+    out->markerSize = markerSize;
 
     // theoretical maximum intermarker distance
     // See S. Garrido-Jurado, R. Muñoz-Salinas, F. J. Madrid-Cuevas, and M. J. Marín-Jiménez. 2014.
@@ -396,17 +396,17 @@ Dictionary generateCustomDictionary(int nMarkers, int markerSize,
     int tau = 2 * (int)std::floor(float(C) * 4.f / 3.f);
 
     // if baseDictionary is provided, calculate its intermarker distance
-    if(baseDictionary.bytesList.rows > 0) {
-        CV_Assert(baseDictionary.markerSize == markerSize);
-        out.bytesList = baseDictionary.bytesList.clone();
+    if(baseDictionary->bytesList.rows > 0) {
+        CV_Assert(baseDictionary->markerSize == markerSize);
+        out->bytesList = baseDictionary->bytesList.clone();
 
         int minDistance = markerSize * markerSize + 1;
-        for(int i = 0; i < out.bytesList.rows; i++) {
-            Mat markerBytes = out.bytesList.rowRange(i, i + 1);
+        for(int i = 0; i < out->bytesList.rows; i++) {
+            Mat markerBytes = out->bytesList.rowRange(i, i + 1);
             Mat markerBits = Dictionary::getBitsFromByteList(markerBytes, markerSize);
             minDistance = min(minDistance, _getSelfDistance(markerBits));
-            for(int j = i + 1; j < out.bytesList.rows; j++) {
-                minDistance = min(minDistance, out.getDistanceToId(markerBits, j));
+            for(int j = i + 1; j < out->bytesList.rows; j++) {
+                minDistance = min(minDistance, out->getDistanceToId(markerBits, j));
             }
         }
         tau = minDistance;
@@ -420,7 +420,7 @@ Dictionary generateCustomDictionary(int nMarkers, int markerSize,
     const int maxUnproductiveIterations = 5000;
     int unproductiveIterations = 0;
 
-    while(out.bytesList.rows < nMarkers) {
+    while(out->bytesList.rows < nMarkers) {
         Mat currentMarker = _generateRandomMarker(markerSize);
 
         int selfDistance = _getSelfDistance(currentMarker);
@@ -429,8 +429,8 @@ Dictionary generateCustomDictionary(int nMarkers, int markerSize,
         // if self distance is better or equal than current best option, calculate distance
         // to previous accepted markers
         if(selfDistance >= bestTau) {
-            for(int i = 0; i < out.bytesList.rows; i++) {
-                int currentDistance = out.getDistanceToId(currentMarker, i);
+            for(int i = 0; i < out->bytesList.rows; i++) {
+                int currentDistance = out->getDistanceToId(currentMarker, i);
                 minDistance = min(currentDistance, minDistance);
                 if(minDistance <= bestTau) {
                     break;
@@ -443,7 +443,7 @@ Dictionary generateCustomDictionary(int nMarkers, int markerSize,
             unproductiveIterations = 0;
             bestTau = 0;
             Mat bytes = Dictionary::getByteListFromBits(currentMarker);
-            out.bytesList.push_back(bytes);
+            out->bytesList.push_back(bytes);
         } else {
             unproductiveIterations++;
 
@@ -459,13 +459,13 @@ Dictionary generateCustomDictionary(int nMarkers, int markerSize,
                 tau = bestTau;
                 bestTau = 0;
                 Mat bytes = Dictionary::getByteListFromBits(bestMarker);
-                out.bytesList.push_back(bytes);
+                out->bytesList.push_back(bytes);
             }
         }
     }
 
     // update the maximum number of correction bits for the generated dictionary
-    out.maxCorrectionBits = (tau - 1) / 2;
+    out->maxCorrectionBits = (tau - 1) / 2;
 
     return out;
 }

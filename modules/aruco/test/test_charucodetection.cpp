@@ -98,7 +98,7 @@ static void getSyntheticRT(double yaw, double pitch, double distance, Mat &rvec,
 /**
  * @brief Project a synthetic marker
  */
-static void projectMarker(Mat &img, aruco::Dictionary dictionary, int id,
+static void projectMarker(Mat &img, Ptr<aruco::Dictionary> dictionary, int id,
                           vector< Point3f > markerObjPoints, Mat cameraMatrix, Mat rvec, Mat tvec,
                           int markerBorder) {
 
@@ -194,8 +194,8 @@ static Mat projectCharucoBoard(Ptr<aruco::CharucoBoard> board, Mat cameraMatrix,
         projectChessboard(board->getChessboardSize().width, board->getChessboardSize().height,
                           board->getSquareLength(), imageSize, cameraMatrix, rvec, tvec);
 
-    for(unsigned int i = 0; i < chessboard->total(); i++) {
-        if(chessboard->ptr< unsigned char >()[i] == 0) {
+    for(unsigned int i = 0; i < chessboard.total(); i++) {
+        if(chessboard.ptr< unsigned char >()[i] == 0) {
             img.ptr< unsigned char >()[i] = 0;
         }
     }
@@ -226,7 +226,7 @@ void CV_CharucoDetection::run(int) {
     int iter = 0;
     Mat cameraMatrix = Mat::eye(3, 3, CV_64FC1);
     Size imgSize(500, 500);
-    aruco::Dictionary dictionary = aruco::getPredefinedDictionary(aruco::DICT_6X6_250);
+    Ptr<aruco::Dictionary> dictionary = aruco::getPredefinedDictionary(aruco::DICT_6X6_250);
     Ptr<aruco::CharucoBoard> board = aruco::CharucoBoard::create(4, 4, 0.03f, 0.015f, dictionary);
 
     cameraMatrix.at< double >(0, 0) = cameraMatrix.at< double >(1, 1) = 650;
@@ -325,7 +325,7 @@ void CV_CharucoPoseEstimation::run(int) {
     int iter = 0;
     Mat cameraMatrix = Mat::eye(3, 3, CV_64FC1);
     Size imgSize(500, 500);
-    aruco::Dictionary dictionary = aruco::getPredefinedDictionary(aruco::DICT_6X6_250);
+    Ptr<aruco::Dictionary> dictionary = aruco::getPredefinedDictionary(aruco::DICT_6X6_250);
     Ptr<aruco::CharucoBoard> board = aruco::CharucoBoard::create(4, 4, 0.03f, 0.015f, dictionary);
 
     cameraMatrix.at< double >(0, 0) = cameraMatrix.at< double >(1, 1) = 650;
@@ -429,7 +429,7 @@ void CV_CharucoDiamondDetection::run(int) {
     int iter = 0;
     Mat cameraMatrix = Mat::eye(3, 3, CV_64FC1);
     Size imgSize(500, 500);
-    aruco::Dictionary dictionary = aruco::getPredefinedDictionary(aruco::DICT_6X6_250);
+    Ptr<aruco::Dictionary> dictionary = aruco::getPredefinedDictionary(aruco::DICT_6X6_250);
     float squareLength = 0.03f;
     float markerLength = 0.015f;
     Ptr<aruco::CharucoBoard> board =

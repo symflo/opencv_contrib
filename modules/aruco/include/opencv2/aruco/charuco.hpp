@@ -98,7 +98,7 @@ class CV_EXPORTS_W CharucoBoard : public Board {
      * and the size of the markers and chessboard squares.
      */
     CV_WRAP static Ptr<CharucoBoard> create(int squaresX, int squaresY, float squareLength, float markerLength,
-                               Dictionary dictionary);
+                               Ptr<Dictionary> dictionary);
 
     /**
       *
@@ -308,7 +308,7 @@ CV_EXPORTS_W void drawDetectedDiamonds(InputOutputArray image, InputArrayOfArray
  *
  * This function return the image of a ChArUco marker, ready to be printed.
  */
-CV_EXPORTS_W void drawCharucoDiamond(Dictionary dictionary, Vec4i ids, int squareLength,
+CV_EXPORTS_W void drawCharucoDiamond(Ptr<Dictionary> dictionary, Vec4i ids, int squareLength,
                                    int markerLength, OutputArray img, int marginSize = 0,
                                    int borderBits = 1);
 

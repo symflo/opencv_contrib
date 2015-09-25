@@ -98,7 +98,7 @@ static void getSyntheticRT(double yaw, double pitch, double distance, Mat &rvec,
 /**
  * @brief Project a synthetic marker
  */
-static void projectMarker(Mat &img, aruco::Dictionary dictionary, int id,
+static void projectMarker(Mat &img, Ptr<aruco::Dictionary> dictionary, int id,
                           vector< Point3f > markerObjPoints, Mat cameraMatrix, Mat rvec, Mat tvec,
                           int markerBorder) {
 
@@ -177,7 +177,7 @@ void CV_ArucoBoardPose::run(int) {
     int iter = 0;
     Mat cameraMatrix = Mat::eye(3, 3, CV_64FC1);
     Size imgSize(500, 500);
-    aruco::Dictionary dictionary = aruco::getPredefinedDictionary(aruco::DICT_6X6_250);
+    Ptr<aruco::Dictionary> dictionary = aruco::getPredefinedDictionary(aruco::DICT_6X6_250);
     Ptr<aruco::GridBoard> board = aruco::GridBoard::create(3, 3, 0.02f, 0.005f, dictionary);
     cameraMatrix.at< double >(0, 0) = cameraMatrix.at< double >(1, 1) = 650;
     cameraMatrix.at< double >(0, 2) = imgSize.width / 2;
@@ -271,7 +271,7 @@ void CV_ArucoRefine::run(int) {
     int iter = 0;
     Mat cameraMatrix = Mat::eye(3, 3, CV_64FC1);
     Size imgSize(500, 500);
-    aruco::Dictionary dictionary = aruco::getPredefinedDictionary(aruco::DICT_6X6_250);
+    Ptr<aruco::Dictionary> dictionary = aruco::getPredefinedDictionary(aruco::DICT_6X6_250);
     Ptr<aruco::GridBoard> board = aruco::GridBoard::create(3, 3, 0.02f, 0.005f, dictionary);
     cameraMatrix.at< double >(0, 0) = cameraMatrix.at< double >(1, 1) = 650;
     cameraMatrix.at< double >(0, 2) = imgSize.width / 2;

@@ -515,7 +515,7 @@ static int _getBorderErrors(const Mat &bits, int markerSize, int borderSize) {
 /**
  * @brief Tries to identify one candidate given the dictionary
  */
-static bool _identifyOneCandidate(const Dictionary &dictionary, InputArray _image,
+static bool _identifyOneCandidate(const Ptr<Dictionary> &dictionary, InputArray _image,
                                   InputOutputArray _corners, int &idx, DetectorParameters params) {
 
     CV_Assert(_corners.total() == 4);
@@ -524,15 +524,15 @@ static bool _identifyOneCandidate(const Dictionary &dictionary, InputArray _imag
 
     // get bits
     Mat candidateBits =
-        _extractBits(_image, _corners, dictionary.markerSize, params.markerBorderBits,
+        _extractBits(_image, _corners, dictionary->markerSize, params.markerBorderBits,
                      params.perspectiveRemovePixelPerCell,
                      params.perspectiveRemoveIgnoredMarginPerCell, params.minOtsuStdDev);
 
     // analyze border bits
     int maximumErrorsInBorder =
-        int(dictionary.markerSize * dictionary.markerSize * params.maxErroneousBitsInBorderRate);
+        int(dictionary->markerSize * dictionary->markerSize * params.maxErroneousBitsInBorderRate);
     int borderErrors =
-        _getBorderErrors(candidateBits, dictionary.markerSize, params.markerBorderBits);
+        _getBorderErrors(candidateBits, dictionary->markerSize, params.markerBorderBits);
     if(borderErrors > maximumErrorsInBorder) return false; // border is wrong
 
     // take only inner bits
@@ -543,7 +543,7 @@ static bool _identifyOneCandidate(const Dictionary &dictionary, InputArray _imag
 
     // try to indentify the marker
     int rotation;
-    if(!dictionary.identify(onlyBits, idx, rotation, params.errorCorrectionRate))
+    if(!dictionary->identify(onlyBits, idx, rotation, params.errorCorrectionRate))
         return false;
     else {
         // shift corner positions to the correct rotation
@@ -565,7 +565,7 @@ static bool _identifyOneCandidate(const Dictionary &dictionary, InputArray _imag
 class IdentifyCandidatesParallel : public ParallelLoopBody {
     public:
     IdentifyCandidatesParallel(const Mat *_grey, InputArrayOfArrays _candidates,
-                               InputArrayOfArrays _contours, const Dictionary *_dictionary,
+                               InputArrayOfArrays _contours, const Ptr<Dictionary> *_dictionary,
                                vector< int > *_idsTmp, vector< char > *_validCandidates,
                                DetectorParameters *_params)
         : grey(_grey), candidates(_candidates), contours(_contours), dictionary(_dictionary),
@@ -590,7 +590,7 @@ class IdentifyCandidatesParallel : public ParallelLoopBody {
 
     const Mat *grey;
     InputArrayOfArrays candidates, contours;
-    const Dictionary *dictionary;
+    const Ptr<Dictionary> *dictionary;
     vector< int > *idsTmp;
     vector< char > *validCandidates;
     DetectorParameters *params;
@@ -602,7 +602,7 @@ class IdentifyCandidatesParallel : public ParallelLoopBody {
  * @brief Identify square candidates according to a marker dictionary
  */
 static void _identifyCandidates(InputArray _image, InputArrayOfArrays _candidates,
-                                InputArrayOfArrays _contours, const Dictionary &dictionary,
+                                InputArrayOfArrays _contours, const Ptr<Dictionary> &dictionary,
                                 OutputArrayOfArrays _accepted, OutputArray _ids,
                                 DetectorParameters params,
                                 OutputArrayOfArrays _rejected = noArray()) {
@@ -798,7 +798,7 @@ class MarkerSubpixelParallel : public ParallelLoopBody {
 
 /**
   */
-void detectMarkers(InputArray _image, Dictionary dictionary, OutputArrayOfArrays _corners,
+void detectMarkers(InputArray _image, Ptr<Dictionary> dictionary, OutputArrayOfArrays _corners,
                    OutputArray _ids, DetectorParameters params,
                    OutputArrayOfArrays _rejectedImgPoints) {
 
@@ -1113,7 +1113,7 @@ void refineDetectedMarkers(InputArray _image, const Ptr<Board> &board,
 
     // maximum bits that can be corrected
     int maxCorrectionRecalculated =
-        int(double(board->dictionary.maxCorrectionBits) * errorCorrectionRate);
+        int(double(board->dictionary->maxCorrectionBits) * errorCorrectionRate);
 
     Mat grey;
     _convertToGrey(_image, grey);
@@ -1181,7 +1181,7 @@ void refineDetectedMarkers(InputArray _image, const Ptr<Board> &board,
 
                 // extract bits
                 Mat bits = _extractBits(
-                    grey, rotatedMarker, board->dictionary.markerSize, params.markerBorderBits,
+                    grey, rotatedMarker, board->dictionary->markerSize, params.markerBorderBits,
                     params.perspectiveRemovePixelPerCell,
                     params.perspectiveRemoveIgnoredMarginPerCell, params.minOtsuStdDev);
 
@@ -1190,7 +1190,7 @@ void refineDetectedMarkers(InputArray _image, const Ptr<Board> &board,
                         .colRange(params.markerBorderBits, bits.rows - params.markerBorderBits);
 
                 codeDistance =
-                    board->dictionary.getDistanceToId(onlyBits, undetectedMarkersIds[i], false);
+                    board->dictionary->getDistanceToId(onlyBits, undetectedMarkersIds[i], false);
             }
 
             // if everythin is ok, assign values to current best match
@@ -1316,7 +1316,7 @@ void GridBoard::draw(Size outSize, OutputArray _img, int marginSize, int borderB
 /**
  */
 Ptr<GridBoard> GridBoard::create(int markersX, int markersY, float markerLength, float markerSeparation,
-                            Dictionary _dictionary) {
+                            Ptr<Dictionary> _dictionary) {
 
     Ptr<GridBoard> res;
 
@@ -1431,8 +1431,8 @@ void drawAxis(InputOutputArray _image, InputArray _cameraMatrix, InputArray _dis
 
 /**
  */
-void drawMarker(Dictionary dictionary, int id, int sidePixels, OutputArray _img, int borderBits) {
-    dictionary.drawMarker(id, sidePixels, _img, borderBits);
+void drawMarker(Ptr<Dictionary> dictionary, int id, int sidePixels, OutputArray _img, int borderBits) {
+    dictionary->drawMarker(id, sidePixels, _img, borderBits);
 }
 
 
@@ -1504,9 +1504,9 @@ void drawPlanarBoard(const Ptr<Board> &board, Size outSize, OutputArray _img, in
         }
 
         // get tiny marker
-        int tinyMarkerSize = 10 * board->dictionary.markerSize + 2;
+        int tinyMarkerSize = 10 * board->dictionary->markerSize + 2;
         Mat tinyMarker;
-        board->dictionary.drawMarker(board->ids[m], tinyMarkerSize, tinyMarker, borderBits);
+        board->dictionary->drawMarker(board->ids[m], tinyMarkerSize, tinyMarker, borderBits);
 
         // interpolate tiny marker to marker position in markerZone
         Mat inCorners(4, 1, CV_32FC2);

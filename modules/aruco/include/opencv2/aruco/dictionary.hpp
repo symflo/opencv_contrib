@@ -128,7 +128,7 @@ enum PREDEFINED_DICTIONARY_NAME {
 /**
   * @brief Returns one of the predefined dictionaries defined in PREDEFINED_DICTIONARY_NAME
   */
-CV_EXPORTS_W const Dictionary &getPredefinedDictionary(PREDEFINED_DICTIONARY_NAME name);
+CV_EXPORTS_W const Ptr<Dictionary> &getPredefinedDictionary(PREDEFINED_DICTIONARY_NAME name);
 
 /**
   * @brief Generates a new customizable marker dictionary
@@ -141,10 +141,9 @@ CV_EXPORTS_W const Dictionary &getPredefinedDictionary(PREDEFINED_DICTIONARY_NAM
   * by markerSize x markerSize bits. If baseDictionary is provided, its markers are directly
   * included and the rest are generated based on them. If the size of baseDictionary is higher
   * than nMarkers, only the first nMarkers in baseDictionary are taken and no new marker is added.
-  * makePtr<Board>
   */
-CV_EXPORTS_W Dictionary generateCustomDictionary(int nMarkers, int markerSize,
-                                               const Dictionary &baseDictionary = Dictionary());
+CV_EXPORTS_W Ptr<Dictionary> generateCustomDictionary(int nMarkers, int markerSize,
+                                               const Ptr<Dictionary> &baseDictionary = makePtr<Dictionary>(Dictionary()));
 
 
 

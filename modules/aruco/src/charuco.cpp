@@ -121,7 +121,7 @@ void CharucoBoard::draw(Size outSize, OutputArray _img, int marginSize, int bord
 /**
  */
 Ptr<CharucoBoard> CharucoBoard::create(int squaresX, int squaresY, float squareLength,
-                                  float markerLength, Dictionary dictionary) {
+                                  float markerLength, Ptr<Dictionary> dictionary) {
 
     CV_Assert(squaresX > 1 && squaresY > 1 && markerLength > 0 && squareLength > markerLength);
     Ptr<CharucoBoard> res;
@@ -751,7 +751,7 @@ void detectCharucoDiamond(InputArray _image, InputArrayOfArrays _markerCorners,
 
     // create Charuco board layout for diamond (3x3 layout)
     Ptr<CharucoBoard> charucoDiamondLayout;
-    Dictionary dict = getPredefinedDictionary(PREDEFINED_DICTIONARY_NAME(0));
+    Ptr<Dictionary> dict = getPredefinedDictionary(PREDEFINED_DICTIONARY_NAME(0));
     charucoDiamondLayout = CharucoBoard::create(3, 3, squareMarkerLengthRate, 1., dict);
 
     vector< vector< Point2f > > diamondCorners;
@@ -878,7 +878,7 @@ void detectCharucoDiamond(InputArray _image, InputArrayOfArrays _markerCorners,
 
 /**
   */
-void drawCharucoDiamond(Dictionary dictionary, Vec4i ids, int squareLength, int markerLength,
+void drawCharucoDiamond(Ptr<Dictionary> dictionary, Vec4i ids, int squareLength, int markerLength,
                         OutputArray _img, int marginSize, int borderBits) {
 
     CV_Assert(squareLength > 0 && markerLength > 0 && squareLength > markerLength);
