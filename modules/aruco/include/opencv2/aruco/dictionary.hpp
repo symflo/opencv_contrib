@@ -104,7 +104,7 @@ class CV_EXPORTS_W Dictionary {
  * Each dictionary indicates the number of bits and the number of markers contained
  * - DICT_ARUCO: standard ArUco Library Markers. 1024 markers, 5x5 bits, 0 minimum distance
  */
-enum PREDEFINED_DICTIONARY_NAME {
+enum CV_EXPORTS_W PREDEFINED_DICTIONARY_NAME {
     DICT_4X4_50 = 0,
     DICT_4X4_100,
     DICT_4X4_250,
@@ -128,7 +128,7 @@ enum PREDEFINED_DICTIONARY_NAME {
 /**
   * @brief Returns one of the predefined dictionaries defined in PREDEFINED_DICTIONARY_NAME
   */
-CV_EXPORTS_W const Ptr<Dictionary> &getPredefinedDictionary(PREDEFINED_DICTIONARY_NAME name);
+CV_EXPORTS const Ptr<Dictionary> &getPredefinedDictionary(PREDEFINED_DICTIONARY_NAME name);
 
 /**
   * @brief Generates a new customizable marker dictionary

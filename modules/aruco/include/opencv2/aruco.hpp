@@ -121,7 +121,7 @@ namespace aruco {
  * - errorCorrectionRate error correction rate respect to the maximun error correction capability
  *   for each dictionary. (default 0.6).
  */
-struct CV_EXPORTS_W DetectorParameters {
+struct CV_EXPORTS_W_MAP DetectorParameters {
 
     DetectorParameters();
 

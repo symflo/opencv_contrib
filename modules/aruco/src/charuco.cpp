@@ -889,8 +889,10 @@ void drawCharucoDiamond(Ptr<Dictionary> dictionary, Vec4i ids, int squareLength,
         CharucoBoard::create(3, 3, (float)squareLength, (float)markerLength, dictionary);
 
     // assign the charuco marker ids
-    for(int i = 0; i < 4; i++)
+    for(int i = 0; i < 4; i++) {
+        /*Vec4i ids_vec = *ids.get();*/
         board->ids[i] = ids[i];
+    }
 
     Size outSize(3 * squareLength + 2 * marginSize, 3 * squareLength + 2 * marginSize);
     board->draw(outSize, _img, marginSize, borderBits);

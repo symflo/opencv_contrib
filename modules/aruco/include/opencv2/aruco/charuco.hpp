@@ -308,7 +308,7 @@ CV_EXPORTS_W void drawDetectedDiamonds(InputOutputArray image, InputArrayOfArray
  *
  * This function return the image of a ChArUco marker, ready to be printed.
  */
-CV_EXPORTS_W void drawCharucoDiamond(Ptr<Dictionary> dictionary, Vec4i ids, int squareLength,
+CV_EXPORTS void drawCharucoDiamond(Ptr<Dictionary> dictionary, Vec4i ids, int squareLength,
                                    int markerLength, OutputArray img, int marginSize = 0,
                                    int borderBits = 1);
 
