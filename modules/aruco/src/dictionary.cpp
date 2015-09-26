@@ -385,7 +385,7 @@ static int _getSelfDistance(const Mat &marker) {
 Ptr<Dictionary> generateCustomDictionary(int nMarkers, int markerSize,
                                     const Ptr<Dictionary> &baseDictionary) {
 
-    Ptr<Dictionary> out;
+    Ptr<Dictionary> out = makePtr<Dictionary>(Dictionary());
     out->markerSize = markerSize;
 
     // theoretical maximum intermarker distance

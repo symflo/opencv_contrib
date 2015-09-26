@@ -124,7 +124,7 @@ Ptr<CharucoBoard> CharucoBoard::create(int squaresX, int squaresY, float squareL
                                   float markerLength, Ptr<Dictionary> dictionary) {
 
     CV_Assert(squaresX > 1 && squaresY > 1 && markerLength > 0 && squareLength > markerLength);
-    Ptr<CharucoBoard> res;
+    Ptr<CharucoBoard> res = makePtr<CharucoBoard>(CharucoBoard());
 
     res->_squaresX = squaresX;
     res->_squaresY = squaresY;

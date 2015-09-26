@@ -1318,7 +1318,7 @@ void GridBoard::draw(Size outSize, OutputArray _img, int marginSize, int borderB
 Ptr<GridBoard> GridBoard::create(int markersX, int markersY, float markerLength, float markerSeparation,
                             Ptr<Dictionary> _dictionary) {
 
-    Ptr<GridBoard> res;
+    Ptr<GridBoard> res = makePtr<GridBoard>(GridBoard());
 
     CV_Assert(markersX > 0 && markersY > 0 && markerLength > 0 && markerSeparation > 0);
 
