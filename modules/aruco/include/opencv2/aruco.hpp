@@ -125,26 +125,26 @@ struct CV_EXPORTS_W_MAP DetectorParameters {
 
     DetectorParameters();
 
-    int adaptiveThreshWinSizeMin;
-    int adaptiveThreshWinSizeMax;
-    int adaptiveThreshWinSizeStep;
-    double adaptiveThreshConstant;
-    double minMarkerPerimeterRate;
-    double maxMarkerPerimeterRate;
-    double polygonalApproxAccuracyRate;
-    double minCornerDistanceRate;
-    int minDistanceToBorder;
-    double minMarkerDistanceRate;
-    bool doCornerRefinement;
-    int cornerRefinementWinSize;
-    int cornerRefinementMaxIterations;
-    double cornerRefinementMinAccuracy;
-    int markerBorderBits;
-    int perspectiveRemovePixelPerCell;
-    double perspectiveRemoveIgnoredMarginPerCell;
-    double maxErroneousBitsInBorderRate;
-    double minOtsuStdDev;
-    double errorCorrectionRate;
+    CV_PROP_RW int adaptiveThreshWinSizeMin;
+    CV_PROP_RW int adaptiveThreshWinSizeMax;
+    CV_PROP_RW int adaptiveThreshWinSizeStep;
+    CV_PROP_RW double adaptiveThreshConstant;
+    CV_PROP_RW double minMarkerPerimeterRate;
+    CV_PROP_RW double maxMarkerPerimeterRate;
+    CV_PROP_RW double polygonalApproxAccuracyRate;
+    CV_PROP_RW double minCornerDistanceRate;
+    CV_PROP_RW int minDistanceToBorder;
+    CV_PROP_RW double minMarkerDistanceRate;
+    CV_PROP_RW bool doCornerRefinement;
+    CV_PROP_RW int cornerRefinementWinSize;
+    CV_PROP_RW int cornerRefinementMaxIterations;
+    CV_PROP_RW double cornerRefinementMinAccuracy;
+    CV_PROP_RW int markerBorderBits;
+    CV_PROP_RW int perspectiveRemovePixelPerCell;
+    CV_PROP_RW double perspectiveRemoveIgnoredMarginPerCell;
+    CV_PROP_RW double maxErroneousBitsInBorderRate;
+    CV_PROP_RW double minOtsuStdDev;
+    CV_PROP_RW double errorCorrectionRate;
 };
 
 
@@ -226,14 +226,14 @@ class CV_EXPORTS_W Board {
     public:
     // array of object points of all the marker corners in the board
     // each marker include its 4 corners, i.e. for M markers, the size is Mx4
-    std::vector< std::vector< Point3f > > objPoints;
+    CV_PROP std::vector< std::vector< Point3f > > objPoints;
 
     // the dictionary of markers employed for this board
     CV_PROP Ptr<Dictionary> dictionary;
 
     // vector of the identifiers of the markers in the board (same size than objPoints)
     // The identifiers refers to the board dictionary
-    std::vector< int > ids;
+    CV_PROP std::vector< int > ids;
 };
 
 
