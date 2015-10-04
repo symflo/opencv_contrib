@@ -648,7 +648,7 @@ static void _identifyCandidates(InputArray _image, InputArrayOfArrays _candidate
     // parse output
     _accepted.create((int)accepted.size(), 1, CV_32FC2);
     for(unsigned int i = 0; i < accepted.size(); i++) {
-        _accepted.create(4, 1, CV_32FC2, i, true);
+        _accepted.create(1, 4, CV_32FC2, i, true);
         Mat m = _accepted.getMat(i);
         accepted[i].copyTo(m);
     }
@@ -660,7 +660,7 @@ static void _identifyCandidates(InputArray _image, InputArrayOfArrays _candidate
     if(_rejected.needed()) {
         _rejected.create((int)rejected.size(), 1, CV_32FC2);
         for(unsigned int i = 0; i < rejected.size(); i++) {
-            _rejected.create(4, 1, CV_32FC2, i, true);
+            _rejected.create(1, 4, CV_32FC2, i, true);
             Mat m = _rejected.getMat(i);
             rejected[i].copyTo(m);
         }
